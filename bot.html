@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bot Collection</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: url('https://files.catbox.moe/lev5md.jpeg');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      color: #333;
+    }
+
+    header {
+      background: url('https://files.catbox.moe/x4m127.jpeg') center/cover no-repeat;
+      color: #fff;
+      text-align: center;
+      padding: 3rem 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5); /* dark overlay for text readability */
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;      
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: rauto-fitpeminmax(250px, 1t(2, 1fr));
+      gap: 1.5rem;
+    }
+
+    .course-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .course-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .course-content {
+      padding: 1rem;
+    }
+
+    .course-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .course-desc {
+      font-size: 0.9rem;
+      color: #666;
+    }
+button {
+          width: 40%;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          padding: 8px;
+          margin: 5px;
+          color: white;
+      }
+      #wa{
+          background: #2b9c27;
+      }
+      #tel{
+         background: #679cce;
+      }
+      #you{
+          background: #ce1122;
+      }
+      .social{
+          text-align: center;
+      }
+      #foot{
+          color: #fff;
+      }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🤖 Benfei Bot Collection</h1>
+  </header>
+
+  <main>
+    <div class="grid">
+      <div class="course-card" onclick="https://youtu.be/276UT9VY-wc?si=4OClcMyISd8F-rLO">
+        <img src="https://files.catbox.moe/cb1s5y.jpeg" alt="Bot 1" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">QUEEN ANITA V5 BOT</div>
+          <div class="course-desc">Famous Anita WhatsApp bot.</div>
+        </div>
+      </div>
+
+      <div class="course-card" onclick="https://youtu.be/oR8jF2q_OU0?si=8KJ2r7egjrigGqet">
+        <img src="https://files.catbox.moe/7uub1h.jpeg" alt="Bot 2" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">LEVANTER BOT</div>
+          <div class="course-desc">Probably the most active WhatsApp bot without disconnection problem.</div>
+        </div>
+      </div>
+
+      <div class="course-card" onclick="https://youtu.be/vX7dRqqyEdY?si=Ex-x1wlAerXkUIKm">
+        <img src="https://files.catbox.moe/yhqnzi.png" alt="Bot 3" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">MUSIC DOWNLOADER BOT</div>
+          <div class="course-desc">See how to create your own telegram music downloader bot in 2mins.</div>
+        </div>
+      </div>      
+            
+  </main><br><br><hr>
+  <div class="social">
+  <h6 id="foot">For more latest WhatsApp bot, follow below 👇</h6>
+    <button id="wa" onclick="location.href='https://whatsapp.com/channel/0029Vay16NVJENy6op6dBV3B'">WhatsApp Channel</button>
+    <button id="tel" onclick="location.href='https://t.me/benfeitech'">Telegram</button>
+    <button id="you" onclick="location.href='https://www.youtube.com/@benfeitech'">YouTube</button>
+    </div><br>
+    
+   
+  <footer style="text-align: center; font-size: 15px;">
+      <div id="foot"> Benfei Bot Source2025™ || &nbsp; All Rights Reserved</div>
+  </footer>
+
+  <script>
+    function openCourse(link) {
+      window.open(link, "_blank"); // Opens in a new tab
+    }
+  </script>
+</body>
+</html>
