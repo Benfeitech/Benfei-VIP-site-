@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Categorized E‑Book Library</title>
+  <style>
+      /* Ensure page takes full height and footer sticks */
+html, body {
+height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main.library {
+  flex: 1; /* Pushes footer down */
+}
+
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --ring: #22d3ee;
+      --radius: 18px;
+      --gap: 1rem;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial;
+      background: radial-gradient(1200px 800px at 10% 10%, #0b1227 0%, var(--bg) 45%),
+                  radial-gradient(1000px 700px at 110% -10%, #07101f 0%, var(--bg) 60%);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    header {
+      max-width: 1200px;
+      margin: 2rem auto 0.5rem auto;
+      padding: 0 1rem;
+    }
+
+    h1 { font-size: clamp(1.5rem, 1.2rem + 2vw, 2.25rem); margin: 0; }
+    h2.category { margin: 2rem 0 1rem; font-size: 1.4rem; color: #38bdf8; }
+
+    .library { max-width: 1200px; margin: 0 auto 3rem; padding: 0 1rem 2rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--gap); }
+
+    .book { background: var(--card); border-radius: var(--radius); overflow: clip; box-shadow: 0 10px 30px rgba(0,0,0,.4); transition: transform .2s ease; }
+    .book:hover { transform: translateY(-3px); }
+
+    .book a { display: grid; grid-template-rows: 1fr auto; text-decoration: none; color: inherit; height: 100%; }
+    .cover { padding: 1rem; display: grid; place-items: end start; min-height: 200px; background: linear-gradient(135deg, #3b82f6, #9333ea); }
+    .title { font-weight: 700; font-size: 1.05rem; text-shadow: 0 2px 14px rgba(0,0,0,.35); }
+    .meta { display: flex; align-items: center; justify-content: space-between; padding: .5rem 1rem 1rem; color: var(--muted); font-size: .85rem; border-top: 1px solid rgba(255,255,255,.04); }
+    .tag { padding: .25rem .5rem; border-radius: 999px; background: rgba(255,255,255,.06); font-size: .7rem; text-transform: uppercase; }
+    footer {
+      background: #0b1227; /* Slightly darker than main background */
+      color: var(--muted);
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    footer { background: #0b1227; color: var(--muted); text-align: center; padding: 1.2rem; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); } footer p { margin: 0; letter-spacing: 0.3px; } footer p:hover { color: var(--ring); transition: color 0.3s ease; }
+    h1{
+        text-align: center;
+    }
+    .oda{
+        text-align: center;
+        color: #668;
+    }
+    .tel{
+    background: linear-gradient(135deg, #3b82f6, #9333ea);
+        padding: 10px;
+        border-radius: 10px;
+        color: #fff;
+       border: 2px dashed #fff;
+       cursor: pointer;
+       width: 50%;
+       margin: 10px;
+       text-align: center; 
+         }
+         .you{
+             background: #2b9c27;
+         }
+         .wa, .you, .tel{
+         width: 40%;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          padding: 8px;
+          margin: 5px;
+          color: white;
+         }
+         .wa{
+          background: #2b9c27;
+      }
+      .tel{
+         background: #679cce;
+      }
+      .you{
+          background: #ce1122;
+      }
+      .full{
+        background: #3b82f6; 
+        padding: 15px;
+        margin: 5px;
+        border: none;
+        border-radius: 40px 5px 40px 5px;
+        color: #fff;
+        width: 50%;
+        height: 
+        cursor: pointer;
+      }
+  </style>
+</head>
+<body>
+  <header>
+      <h1><span id="name"></span> Welcome To Benfei Ebook Library</h1>
+  
+    <p class="sub">Books are grouped into categories for easier browsing.</p>
+  </header>
+
+  <main class="library">
+
+    
+    <!-- Personal Development -->
+    <h2 class="category">Personal Development</h2>
+    <section class="grid">
+      <article class="book"><a href="https://t.me/benfeibookhub/301"><div class="cover"><h2 class="title">Atomic Habit - James Clear</h2></div><div class="meta"><span class="tag">Self‑Improvement</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/454"><div class="cover"><h2 class="title">The Power of Now</h2></div><div class="meta"><span class="tag">Mindfulness</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/455"><div class="cover"><h2 class="title">The Power of Positive Thinking</h2></div><div class="meta"><span class="tag">Mindset</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/323"><div class="cover"><h2 class="title">Mindset - The New Psychology of Success</h2></div><div class="meta"><span class="tag">Mindset</span><span>Open →</span></div></a></article>
+      
+      <article class="book"><a href="https://t.me/benfeibookhub/297"><div class="cover"><h2 class="title">Become a Better You - Joel Osteen</h2></div><div class="meta"><span class="tag">Self‑Help</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/296"><div class="cover"><h2 class="title">How Successful People Think</h2></div><div class="meta"><span class="tag">Self‑Help</span><span>Open →</span></div></a></article>
+    </section>
+<!-- Motivation / Inspiration -->
+    <h2 class="category">Motivation & Inspiration</h2>
+    <section class="grid">
+      <article class="book"><a href="https://t.me/benfeibookhub/465"><div class="cover"><h2 class="title">The Willpower Instinct</h2></div><div class="meta"><span class="tag">Motivation</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/457"><div class="cover"><h2 class="title">Trump Never Give Up</h2></div><div class="meta"><span class="tag">Motivation</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/304"><div class="cover"><h2 class="title">Take the Risk - Ben Carson</h2></div><div class="meta"><span class="tag">Motivation</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/365"><div class="cover"><h2 class="title">The Courage to Be Disliked</h2></div><div class="meta"><span class="tag">Motivation</span><span>Open →</span></div></a></article>
+    </section>
+    
+
+    <!-- Wealth & Finance -->
+    <h2 class="category">Wealth & Finance</h2>
+    <section class="grid">
+      <article class="book"><a href="https://t.me/benfeibookhub/464"><div class="cover"><h2 class="title">The Science of Getting Rich</h2></div><div class="meta"><span class="tag">Finance</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/263"><div class="cover"><h2 class="title">Think and Grow Rich - Napoleon Hill</h2></div><div class="meta"><span class="tag">Finance</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/262"><div class="cover"><h2 class="title">Rich Dad Poor Dad - Robert Kyoski</h2></div><div class="meta"><span class="tag">Finance</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/307"><div class="cover"><h2 class="title">The Richest Man in Babylon</h2></div><div class="meta"><span class="tag">Finance</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/299"><div class="cover"><h2 class="title">The Millionaire Next Door</h2></div><div class="meta"><span class="tag">Finance</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/432"><div class="cover"><h2 class="title">Financial Freedom</h2></div><div class="meta"><span class="tag">Finance</span><span>Open →</span></div></a></article>
+   
+      <article class="book"><a href="https://t.me/benfeibookhub/453"><div class="cover"><h2 class="title">The Compound Effect</h2></div><div class="meta"><span class="tag">Finance</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="#"><div class="cover"><h2 class="title">Secrets of the Millionaire Mind</h2></div><div class="meta"><span class="tag">Finance</span><span>Open →</span></div></a></article>
+    </section>
+
+    <!-- Sales & Marketing -->
+    <h2 class="category">Sales & Marketing</h2>
+    <section class="grid">
+      <article class="book"><a href="https://t.me/benfeibookhub/437"><div class="cover"><h2 class="title">How to Sell Without Selling</h2></div><div class="meta"><span class="tag">Sales</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/438"><div class="cover"><h2 class="title">How to Sell Anything to Anyone</h2></div><div class="meta"><span class="tag">Sales</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/291"><div class="cover"><h2 class="title">How to Sell to Nigerians</h2></div><div class="meta"><span class="tag">Sales</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/261"><div class="cover"><h2 class="title">Sell Like Crazy</h2></div><div class="meta"><span class="tag">Sales</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/444"><div class="cover"><h2 class="title">Limitless Lead Generation</h2></div><div class="meta"><span class="tag">Marketing</span><span>Open →</span></div></a></article>
+      
+      <article class="book"><a href="https://t.me/benfeibookhub/424"><div class="cover"><h2 class="title">Content Marketing: Think Like a Publisher</h2></div><div class="meta"><span class="tag">Marketing</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/377"><div class="cover"><h2 class="title">Complete Marketing Blueprint</h2></div><div class="meta"><span class="tag">Marketing</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/337"><div class="cover"><h2 class="title">Affiliate Marketing Secret</h2></div><div class="meta"><span class="tag">Marketing</span><span>Open →</span></div></a></article>
+    </section>
+
+    <!-- Psychology & Influence -->
+    <h2 class="category">Psychology & Influence</h2>
+    <section class="grid">
+      <article class="book"><a href="https://t.me/benfeibookhub/460"><div class="cover"><h2 class="title">What to Say When You Talk to Yourself</h2></div><div class="meta"><span class="tag">Psychology</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/449"><div class="cover"><h2 class="title">The 48 Laws of Power</h2></div><div class="meta"><span class="tag">Power</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/450"><div class="cover"><h2 class="title">The Art of Creative Thinking</h2></div><div class="meta"><span class="tag">Creativity</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/439"><div class="cover"><h2 class="title">How to Win Friends and Influence People</h2></div><div class="meta"><span class="tag">Influence</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/270"><div class="cover"><h2 class="title">The Psychology of Selling - Brian Tracy</h2></div><div class="meta"><span class="tag">Psychology</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/426"><div class="cover"><h2 class="title">Copywriting Secrets</h2></div><div class="meta"><span class="tag">Persuasion</span><span>Open →</span></div></a></article>
+    </section>
+
+    <!-- Trading & Business -->
+    <h2 class="category">Trading & Business</h2>
+    <section class="grid">
+      <article class="book"><a href="https://t.me/benfeibookhub/412"><div class="cover"><h2 class="title">The Complete Trading Course</h2></div><div class="meta"><span class="tag">Trading</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/411"><div class="cover"><h2 class="title">The Art and Science of Technical Analysis</h2></div><div class="meta"><span class="tag">Trading</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/392"><div class="cover"><h2 class="title">High Probability Trading</h2></div><div class="meta"><span class="tag">Trading</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/436"><div class="cover"><h2 class="title">How to Make Millions in Business - Grant Cardone</h2></div><div class="meta"><span class="tag">Business</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/445"><div class="cover"><h2 class="title">Make Time - Jake Knapp</h2></div><div class="meta"><span class="tag">Productivity</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/372"><div class="cover"><h2 class="title">Goals - Brian Tracy</h2></div><div class="meta"><span class="tag">Goals</span><span>Open →</span></div></a></article>
+    </section>
+
+    <!-- Miscellaneous / Other -->
+    <h2 class="category">Other</h2>
+    <section class="grid">
+      <article class="book"><a href="https://t.me/benfeibookhub/456"><div class="cover"><h2 class="title">The Power of Visual Storytelling</h2></div><div class="meta"><span class="tag">Creativity</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/325"><div class="cover"><h2 class="title">The Holy Book of WhatsApp TV</h2></div><div class="meta"><span class="tag">Misc</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/324"><div class="cover"><h2 class="title">The Magic in Your Mind</h2></div><div class="meta"><span class="tag">Mindset</span><span>Open →</span></div></a></article>
+      <article class="book"><a href="https://t.me/benfeibookhub/322"><div class="cover"><h2 class="title">Power of the Subconscious Mind - Joseph Murphy</h2></div><div class="meta"><span class="tag">Mind</span><span>Open →</span></div></a>
+      </article></session></main>
+      
+     <session class="oda"><h5 class="others">Access Full Library With 300+ Ebooks Below</h5>
+      
+      <button onclick ="location.href='https://t.me/benfeibookhub'" class="full">Full Library</button><br><br>
+      <p id="follow">Follow Our Social Handles Below </p>
+      
+      <button onclick="location.href='https://www.youtube.com/@benfeitech'" class="you">YouTube </button><br>
+      <button onclick ="location.href='https://t.me/benfeitech'" class="tel">Telegram</button><br>
+      <button onclick="location.href='https://whatsapp.com/channel/0029Vay16NVJENy6op6dBV3B'" class="wa">WhatsApp Channel</button><br>
+      </session>
+    <!-- FOOTER -->
+  <footer>
+    <p>Benfei E-book Library 2025™ &nbsp; || &nbsp; All Rights Reserved</p>
+  </footer>
+</body>
+</html>
