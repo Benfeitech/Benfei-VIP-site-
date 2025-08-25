@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Course Library</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: #f5f7fa;
+      color: #333;
+    }
+
+    header {
+      background: url('https://files.catbox.moe/x4m127.jpeg') center/cover no-repeat;
+      color: #fff;
+      text-align: center;
+      padding: 3rem 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5); /* dark overlay for text readability */
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .course-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .course-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .course-content {
+      padding: 1rem;
+    }
+
+    .course-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .course-desc {
+      font-size: 0.9rem;
+      color: #666;
+    }
+button {
+          width: 40%;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          padding: 8px;
+          margin: 5px;
+          color: white;
+      }
+      #wa{
+          background: #2b9c27;
+      }
+      #tel{
+         background: #679cce;
+      }
+      #you{
+          background: #ce1122;
+      }
+      .social{
+          text-align: center;
+      }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📚 Benfei Digital Course Library</h1>
+  </header>
+
+  <main>
+    <div class="grid">
+      <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1s1myE7rJybBpyCXSu5t6uP1MiUwyrdi5')">
+        <img src="https://files.catbox.moe/q7syt5.jpeg" alt="Course 1" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">BLACKHAT CRACKING COURSE</div>
+          <div class="course-desc">All hacking and cracking courses. Data decryption, Code dis obfuscation, Security by-passing.</div>
+        </div>
+      </div>
+
+      <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1ppf8ai9tGOO7unoJv6FuJhrWYsx292nZ')">
+        <img src="https://files.catbox.moe/8ypxjr.jpeg" alt="Course 2" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">AI VOICE CLONING</div>
+          <div class="course-desc">Clone any voice using free ai tools .</div>
+        </div>
+      </div>
+
+      <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1ZU99WiLZMt0XTJw6uIpPOmMu02bem5J9')">
+        <img src="https://files.catbox.moe/4165vx.jpeg" alt="Course 3" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">WIFI PASSWORD HACKING</div>
+          <div class="course-desc">Learn to crack down any WiFi password 🔑.</div>
+        </div>
+      </div>
+       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1Ep-SzaXwz_IMVyGxuNG7PDc5X9h3s7lZ')">
+        <img src="https://files.catbox.moe/23zy6j.jpeg" alt="Course 4" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">MTN CHEAP DATA</div>
+          <div class="course-desc">Learn secret methods to get cheap data and unlimited Internet 🛜 access .</div>
+        </div>
+      </div>
+      
+      <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/16wPu2skIKnvnE-tKmn_uVOYgNgX-8nTW')">
+        <img src="https://files.catbox.moe/lgsoni.jpeg" alt="Course 5" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">3D LOGO DESIGN </div>
+          <div class="course-desc">Learn to design mind-blowing 3d logo for brands and business owners.</div>
+        </div>
+      </div>     
+       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1ad6rR4aipwXjszhr3nLzM_w7Y-p3XIF9')">
+        <img src="https://files.catbox.moe/f220ys.jpeg" alt="Course 6" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">3D VIDEO ANIMATION COURSE</div>
+          <div class="course-desc">Create 3d animation videos using free tools</div>
+        </div>
+      </div>   
+      
+       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1zXrVV-Kq1gRB460lQnT7j25rigLiSlt4')">
+        <img src="https://files.catbox.moe/509ove.jpeg" alt="Course 7" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">WEB DESIGN COURSE</div>
+          <div class="course-desc">Learn to design professional website for business owners.</div>
+        </div>
+      </div>  
+      
+       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1Ou8qWKK4xL9qpa66ToZvuGHuqw4LsFtE')">
+        <img src="https://files.catbox.moe/9b4fa0.jpeg" alt="Course 8" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">GOOGLE MY BUSINESS COURSE</div>
+          <div class="course-desc">Learn how to register businesses on google. Let people customers find you on google.</div>
+        </div>
+      </div>  
+      
+       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/133ozNANhpDLDl4zWKUDBiYGwmHyFoFYy')">
+        <img src="https://files.catbox.moe/wyb0pi.jpeg" alt="Course 9" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">GRAPHIC DESIGN COURSE</div>
+          <div class="course-desc">Learn how to create amazing flyer design of any kind</div>
+        </div>
+      </div>   
+      
+       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/14Nu-gd9sZiibkV4ZzXBLVEWSIS2l50m6')">
+        <img src="https://files.catbox.moe/xdsci8.jpeg" alt="Course 10" class="course-image" />
+        <div class="course-content">
+          <div class="course-title">VIDEO EDITING AND ANIMATION</div>
+          <div class="course-desc">Learn how to create stunning videos suitable for adverts, and social media content. Also learn to edit like a pro.</div>
+        </div>
+      </div>               
+  
+    </div>
+  </main><br><br><hr>
+  <div class="social">
+  <h6>Follow our social handle for more latest tech resources</h6>
+    <button id="wa" onclick="location.href='https://whatsapp.com/channel/0029Vay16NVJENy6op6dBV3B'">WhatsApp Channel</button>
+    <button id="tel" onclick="location.href='https://t.me/benfeitech'">Telegram</button>
+    <button id="you" onclick="location.href='https://www.youtube.com/@benfeitech'">YouTube</button>
+    </div><br>
+    
+   
+  <footer style="text-align: center; font-size: 15px;">
+      <div id="foot"> Benfei Course 2025™ || &nbsp; All Rights Reserved</div>
+  </footer>
+
+  <script>
+    function openCourse(link) {
+      window.open(link, "_blank"); // Opens in a new tab
+    }
+  </script>
+</body>
+</html>
