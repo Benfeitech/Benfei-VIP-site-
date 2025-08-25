@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe vs Smart Computer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      justify-content: center;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .instructions {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .scoreboard {
+      display: flex;
+      gap: 20px;
+      margin: 15px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 8px;
+    }
+
+    .cell {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 36px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .cell:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #ffdd57;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #ffcc00;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <h1>🎮 Tic Tac Toe vs Smart Computer</h1>
+
+  <div class="instructions">
+    <strong>How to Play:</strong><br>
+    - You are <b>X</b>, the computer is <b>O</b>.<br>
+    - Click on any empty square to make your move.<br>
+    - The computer blocks your winning moves and tries to win too.<br>
+    - First to align 3 in a row (horizontally, vertically, or diagonally) wins!<br>
+    - If all squares are filled and nobody wins, it’s a draw.<br>
+    - Your score and the computer’s score will be tracked below.
+  </div>
+
+  <div class="scoreboard">
+    <div>👤 You: <span id="userScore">0</span></div>
+    <div>🤖 Computer: <span id="computerScore">0</span></div>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <div class="message" id="message">Your turn! Make a move.</div>
+  <button onclick="resetGame()">🔄 Reset Board</button>
+
+  <script>
+    const boardElement = document.getElementById("board");
+    const messageElement = document.getElementById("message");
+    const userScoreElement = document.getElementById("userScore");
+    const computerScoreElement = document.getElementById("computerScore");
+
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let userScore = 0;
+    let computerScore = 0;
+    let gameOver = false;
+
+    const winningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    // Initialize board UI
+    function initBoard() {
+      boardElement.innerHTML = "";
+      board.forEach((cell, index) => {
+        const cellDiv = document.createElement("div");
+        cellDiv.classList.add("cell");
+        cellDiv.dataset.index = index;
+        cellDiv.textContent = cell;
+        cellDiv.addEventListener("click", handleUserMove);
+        boardElement.appendChild(cellDiv);
+      });
+    }
+
+    // User move
+    function handleUserMove(e) {
+      const index = e.target.dataset.index;
+      if (board[index] === "" && !gameOver) {
+        board[index] = "X";
+        updateBoard();
+        if (checkWinner("X")) {
+          userScore++;
+          userScoreElement.textContent = userScore;
+          messageElement.textContent = "🎉 You win!";
+          gameOver = true;
+          return;
+        }
+        if (board.every(cell => cell !== "")) {
+          messageElement.textContent = "😐 It's a draw!";
+          gameOver = true;
+          return;
+        }
+        messageElement.textContent = "🤖 Computer's turn...";
+        setTimeout(computerMove, 700);
+      }
+    }
+
+    // Computer move with smarter AI
+    function computerMove() {
+      let move = findBestMove("O") || findBestMove("X") || getRandomMove();
+
+      if (move !== null) {
+        board[move] = "O";
+        updateBoard();
+
+        if (checkWinner("O")) {
+          computerScore++;
+          computerScoreElement.textContent = computerScore;
+          messageElement.textContent = "🤖 Computer wins!";
+          gameOver = true;
+          return;
+        }
+        if (board.every(cell => cell !== "")) {
+          messageElement.textContent = "😐 It's a draw!";
+          gameOver = true;
+          return;
+        }
+      }
+
+      messageElement.textContent = "Your turn! Make a move.";
+    }
+
+    // Try to find winning/blocking move
+    function findBestMove(player) {
+      for (let combo of winningCombinations) {
+        const [a, b, c] = combo;
+        const values = [board[a], board[b], board[c]];
+        if (values.filter(v => v === player).length === 2 && values.includes("")) {
+          return combo[values.indexOf("")];
+        }
+      }
+      return null;
+    }
+
+    // Random available move
+    function getRandomMove() {
+      const available = board
+        .map((val, idx) => (val === "" ? idx : null))
+        .filter(val => val !== null);
+      return available.length ? available[Math.floor(Math.random() * available.length)] : null;
+    }
+
+    // Update UI
+    function updateBoard() {
+      document.querySelectorAll(".cell").forEach((cell, index) => {
+        cell.textContent = board[index];
+      });
+    }
+
+    // Check winner
+    function checkWinner(player) {
+      return winningCombinations.some(combination =>
+        combination.every(index => board[index] === player)
+      );
+    }
+
+    // Reset game
+    function resetGame() {
+      board = ["", "", "", "", "", "", "", "", ""];
+      gameOver = false;
+      messageElement.textContent = "Your turn! Make a move.";
+      initBoard();
+    }
+
+    initBoard();
+  </script>
+</body>
+</html>
