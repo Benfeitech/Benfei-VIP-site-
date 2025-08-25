@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weather App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    input {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #eee;
+    }
+
+    .weather-card {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      display: none;
+    }
+
+    .weather-card img {
+      width: 80px;
+      margin: 10px 0;
+    }
+
+    .error {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #ffcccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌤 Weather App</h1>
+  
+  <div class="search-box">
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <button onclick="getWeather()">Search</button>
+  </div>
+  
+  <div class="weather-card" id="weatherCard">
+    <h2 id="cityName"></h2>
+    <img id="weatherIcon" alt="Weather Icon">
+    <p id="temperature"></p>
+    <p id="description"></p>
+  </div>
+
+  <p class="error" id="errorMsg"></p>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById("cityInput").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+      const card = document.getElementById("weatherCard");
+
+      if (!city) {
+        errorMsg.textContent = "Please enter a city name.";
+        card.style.display = "none";
+        return;
+      }
+
+      errorMsg.textContent = "";
+
+      try {
+        // Step 1: Get coordinates for the city
+        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`);
+        const geoData = await geoRes.json();
+
+        if (!geoData.results || geoData.results.length === 0) {
+          errorMsg.textContent = "City not found. Try again.";
+          card.style.display = "none";
+          return;
+        }
+
+        const { latitude, longitude, name, country } = geoData.results[0];
+
+        // Step 2: Get weather data
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+        const weatherData = await weatherRes.json();
+        const weather = weatherData.current_weather;
+
+        // Weather icon mapping (simple)
+        const icons = {
+          0: "☀️", // Clear
+          1: "🌤", // Mainly clear
+          2: "⛅", // Partly cloudy
+          3: "☁️", // Overcast
+          45: "🌫", 48: "🌫", // Fog
+          51: "🌦", 61: "🌧", 71: "❄️", 95: "⛈" // Rain/Snow/Thunder
+        };
+
+        document.getElementById("cityName").textContent = `${name}, ${country}`;
+        document.getElementById("temperature").textContent = `🌡 ${weather.temperature}°C`;
+        document.getElementById("description").textContent = `Windspeed: ${weather.windspeed} km/h`;
+        document.getElementById("weatherIcon").src = `https://open-meteo.com/images/icons/${weather.weathercode}.png`;
+        document.getElementById("weatherIcon").alt = "Weather Icon";
+
+        card.style.display = "block";
+      } catch (error) {
+        errorMsg.textContent = "Something went wrong. Please try again.";
+        card.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
