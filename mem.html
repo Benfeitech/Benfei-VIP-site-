@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Memory Card Game</title>
+<style>
+  :root{
+    --bg: #0f172a;         /* slate-900 */
+    --panel: #111827;      /* gray-900 */
+    --muted: #94a3b8;      /* slate-400 */
+    --text: #e5e7eb;       /* gray-200 */
+    --brand: #60a5fa;      /* blue-400 */
+    --brand-2: #38bdf8;    /* sky-400 */
+    --good:#22c55e; --warn:#f59e0b; --err:#f87171;
+    --card: #0b1224;
+    --card-edge: rgba(255,255,255,.08);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body{
+    margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+    color: var(--text);
+    background: radial-gradient(1200px 700px at 10% -10%, #1e293b 0%, #0b1224 50%, var(--bg) 100%);
+    display:flex; align-items:center; justify-content:center; padding: 24px;
+  }
+
+  .app{ width:min(980px,100%); display:grid; gap:16px; }
+
+  header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  .title{
+    font-weight:800; letter-spacing:.3px; line-height:1.1;
+    font-size: clamp(22px, 3vw, 30px);
+    background: linear-gradient(90deg, var(--brand), var(--brand-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .pill{
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10);
+    padding:8px 12px; border-radius:12px; font-weight:600; color:var(--text);
+  }
+  .btn{
+    border:none; cursor:pointer; padding:10px 14px; border-radius:12px; font-weight:800;
+    color:#0b1224; background:linear-gradient(90deg,var(--brand),var(--brand-2));
+    box-shadow: 0 8px 24px rgba(56,189,248,.22);
+    transition: transform .04s ease, filter .2s ease;
+  }
+  .btn:active{ transform: translateY(1px); }
+
+  .help{
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius:16px; padding:14px 16px; line-height:1.6; color: var(--muted);
+    font-size: 14px;
+  }
+
+  .board-wrap{
+    display:grid; grid-template-columns: 1fr 320px; gap:16px;
+  }
+  @media (max-width: 900px){
+    .board-wrap{ grid-template-columns: 1fr; }
+  }
+
+  /* Board */
+  .board{
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 18px; padding: 16px;
+    display:grid; gap:12px;
+    grid-template-columns: repeat(4, minmax(70px, 1fr));
+    grid-auto-rows: minmax(90px, 1fr);
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  /* Card */
+  .card{
+    position: relative;
+    perspective: 900px;
+    height: 0;
+    padding-bottom: 100%; /* perfect square */
+  }
+  .inner{
+    position:absolute; inset:0;
+    transition: transform .6s cubic-bezier(.2,.8,.2,1);
+    transform-style: preserve-3d;
+    border-radius:14px;
+  }
+  .card.flipped .inner, .card.matched .inner { transform: rotateY(180deg); }
+
+  .face{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    -webkit-backface-visibility:hidden; backface-visibility:hidden;
+    border-radius:14px;
+    border:1px solid var(--card-edge);
+  }
+  .front{
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    font-weight:800; letter-spacing: .4px; color: var(--muted);
+  }
+  .back{
+    transform: rotateY(180deg);
+    background: radial-gradient(120px 60px at 20% 10%, rgba(96,165,250,.25), rgba(56,189,248,.15), rgba(255,255,255,.03)),
+                linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    font-size: clamp(26px, 6vw, 40px);
+  }
+
+  /* Sidebar / stats */
+  .panel{
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 18px; padding: 16px;
+    display:grid; gap:12px; height:fit-content;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  .meta{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .label{ color: var(--muted); font-size: 12px; }
+  .value{ font-weight:800; }
+
+  .progress{
+    width:100%; height:10px; border-radius:999px; background: rgba(255,255,255,.06); overflow:hidden;
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .bar{ height:100%; width:0%; background: linear-gradient(90deg,var(--good),#10b981); }
+
+  .note{ font-size:12px; color:var(--muted); }
+
+  /* Win modal */
+  .modal{
+    position: fixed; inset:0; display:none; place-items:center; background: rgba(0,0,0,.55);
+  }
+  .modal.open{ display:grid; }
+  .dialog{
+    width:min(560px, 92%); background: var(--panel);
+    border:1px solid rgba(255,255,255,.10); border-radius:18px; padding:18px;
+    text-align:center; box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  }
+  .dialog h2{ margin:.2em 0 .2em; }
+  .stats{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin: 10px 0 14px; }
+  .chip{
+    background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10);
+    border-radius:999px; padding:8px 12px; font-weight:700;
+  }
+</style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="title">🧠 Memory Card Game</div>
+      <div class="controls">
+        <button id="restartBtn" class="btn" title="Restart & reshuffle">↻ Restart</button>
+      </div>
+    </header>
+
+    <div class="help">
+      <strong>How to play:</strong> Flip two cards at a time. If they match, they stay face-up. Match all pairs using the fewest moves and time. Click <em>Restart</em> anytime to reshuffle a brand new board.
+    </div>
+
+    <div class="board-wrap">
+      <section class="board" id="board" aria-label="Memory game board"></section>
+
+      <aside class="panel">
+        <div class="meta">
+          <div>
+            <div class="label">Time</div>
+            <div class="value" id="time">00:00</div>
+          </div>
+          <div>
+            <div class="label">Moves</div>
+            <div class="value" id="moves">0</div>
+          </div>
+          <div>
+            <div class="label">Matched</div>
+            <div class="value"><span id="matched">0</span>/<span id="total">0</span></div>
+          </div>
+          <div>
+            <div class="label">Best Time</div>
+            <div class="value" id="best">—</div>
+          </div>
+        </div>
+
+        <div class="progress" aria-label="Match progress">
+          <div class="bar" id="bar"></div>
+        </div>
+
+        <div class="note" style="text-align: center;">Powered by Benfei Tech </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Win Modal -->
+  <div class="modal" id="winModal" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+    <div class="dialog">
+      <h2 id="winTitle">🏆 You cleared the board!</h2>
+      <div class="stats">
+        <div class="chip">⏱ <span id="finalTime">00:00</span></div>
+        <div class="chip">🔁 <span id="finalMoves">0</span> moves</div>
+      </div>
+      <button class="btn" id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+<script>
+  // ---------- Config ----------
+  // Feel free to swap or add more icons (must be even count when doubled)
+  const ICONS = ["🐶","🐱","🦊","🐼","🐨","🐯","🦁","🐸","🦄","🐙","🐥","🦆","🐢","🌙","⭐","⚡"];
+  const PAIRS = 8; // total pairs (board will be 4x4). Set 10 for 5x4, etc.
+
+  // ---------- State ----------
+  let deck = [];
+  let firstCard = null;
+  let lock = false;
+  let matches = 0;
+  let moves = 0;
+  let timer = null;
+  let seconds = 0;
+  const bestKey = `memory-best-${PAIRS}`;
+
+  // ---------- Helpers ----------
+  const $ = (id) => document.getElementById(id);
+  const boardEl   = $("board");
+  const movesEl   = $("moves");
+  const timeEl    = $("time");
+  const matchedEl = $("matched");
+  const totalEl   = $("total");
+  const barEl     = $("bar");
+  const bestEl    = $("best");
+  const winModal  = $("winModal");
+  const finalTime = $("finalTime");
+  const finalMoves= $("finalMoves");
+
+  function shuffle(arr){
+    // Fisher–Yates
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function formatTime(s){
+    const m = Math.floor(s/60).toString().padStart(2,'0');
+    const r = (s%60).toString().padStart(2,'0');
+    return `${m}:${r}`;
+  }
+
+  function startTimer(){
+    stopTimer();
+    timer = setInterval(() => {
+      seconds++;
+      timeEl.textContent = formatTime(seconds);
+    }, 1000);
+  }
+
+  function stopTimer(){
+    if (timer){ clearInterval(timer); timer = null; }
+  }
+
+  function setProgress(){
+    matchedEl.textContent = matches;
+    totalEl.textContent = PAIRS;
+    const pct = Math.round((matches / PAIRS) * 100);
+    barEl.style.width = pct + "%";
+  }
+
+  function updateBest(){
+    const best = localStorage.getItem(bestKey);
+    bestEl.textContent = best ? best : "—";
+  }
+
+  // ---------- Game Setup ----------
+  function buildDeck(){
+    const chosen = shuffle([...ICONS]).slice(0, PAIRS);
+    deck = shuffle(chosen.concat(chosen)).map((icon, idx) => ({
+      id: idx,
+      icon,
+      matched: false,
+    }));
+  }
+
+  function renderBoard(){
+    boardEl.innerHTML = "";
+    deck.forEach(card => {
+      const cardEl = document.createElement("button");
+      cardEl.className = "card";
+      cardEl.type = "button";
+      cardEl.setAttribute("aria-label", "Memory card");
+      cardEl.dataset.id = card.id;
+
+      cardEl.innerHTML = `
+        <div class="inner">
+          <div class="face front">MEMORY</div>
+          <div class="face back">${card.icon}</div>
+        </div>
+      `;
+      cardEl.addEventListener("click", onFlip);
+      boardEl.appendChild(cardEl);
+    });
+  }
+
+  function newGame(){
+    firstCard = null;
+    lock = false;
+    matches = 0;
+    moves = 0;
+    seconds = 0;
+    timeEl.textContent = "00:00";
+    movesEl.textContent = "0";
+    setProgress();
+    buildDeck();
+    renderBoard();
+    updateBest();
+    startTimer();
+  }
+
+  // ---------- Gameplay ----------
+  function onFlip(e){
+    if (lock) return;
+    const el = e.currentTarget;
+    const id = +el.dataset.id;
+    const card = deck.find(c => c.id === id);
+    if (!card || card.matched) return;
+
+    // ignore clicking same card twice
+    if (firstCard && firstCard.id === id) return;
+
+    el.classList.add("flipped");
+
+    if (!firstCard){
+      firstCard = { id, icon: card.icon, el };
+      return;
+    }
+
+    // second flip
+    moves++;
+    movesEl.textContent = String(moves);
+    lock = true;
+
+    if (card.icon === firstCard.icon){
+      // match!
+      setTimeout(() => {
+        el.classList.add("matched");
+        firstCard.el.classList.add("matched");
+        deck[id].matched = true;
+        deck[firstCard.id].matched = true;
+        matches++;
+        setProgress();
+        firstCard = null;
+        lock = false;
+
+        if (matches === PAIRS){
+          stopTimer();
+          finalTime.textContent = formatTime(seconds);
+          finalMoves.textContent = String(moves);
+          // save best time if better or empty
+          const best = localStorage.getItem(bestKey);
+          if (!best || seconds < best.split(':').reduce((a,b,i)=> i? +a*60+ +b : +a*60 + +b, 0)){
+            localStorage.setItem(bestKey, formatTime(seconds));
+            updateBest();
+          }
+          winModal.classList.add("open");
+        }
+      }, 300);
+    } else {
+      // not a match → flip both back
+      setTimeout(() => {
+        el.classList.remove("flipped");
+        firstCard.el.classList.remove("flipped");
+        firstCard = null;
+        lock = false;
+      }, 750);
+    }
+  }
+
+  // ---------- Events ----------
+  $("restartBtn").addEventListener("click", () => {
+    winModal.classList.remove("open");
+    newGame();
+  });
+  $("playAgainBtn").addEventListener("click", () => {
+    winModal.classList.remove("open");
+    newGame();
+  });
+
+  // ---------- Init ----------
+  newGame();
+</script>
+</body>
+</html>
