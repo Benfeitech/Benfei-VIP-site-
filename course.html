@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <title>My Course Library</title>
   <style>
     body {
@@ -43,6 +45,14 @@
       max-width: 1200px;
       margin: auto;
     }
+    button i {
+  font-size: 30px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
     .grid {
       display: grid;
@@ -85,14 +95,20 @@
       color: #666;
     }
 button {
-          width: 40%;
+          width: 60px;
+          height: 60px;
           border: none;
-          border-radius: 8px;
+          border-radius: 50%;
           cursor: pointer;
           padding: 8px;
           margin: 5px;
           color: white;
+          transition: transform 0.5s ease;
       }
+      button:hover{
+            transform: scale(1.15);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.55);
+          }
       #wa{
           background: #2b9c27;
       }
@@ -114,7 +130,7 @@ button {
 
   <main>
     <div class="grid">
-      <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1s1myE7rJybBpyCXSu5t6uP1MiUwyrdi5')">
+      <div class="course-card" data-aos="fade-up" onclick="openCourse('https://drive.google.com/drive/folders/1s1myE7rJybBpyCXSu5t6uP1MiUwyrdi5')">
         <img src="https://files.catbox.moe/q7syt5.jpeg" alt="Course 1" class="course-image" />
         <div class="course-content">
           <div class="course-title">BLACKHAT CRACKING COURSE</div>
@@ -122,7 +138,7 @@ button {
         </div>
       </div>
 
-      <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1ppf8ai9tGOO7unoJv6FuJhrWYsx292nZ')">
+      <div class="course-card" data-aos="zoom-in" onclick="openCourse('https://drive.google.com/drive/folders/1ppf8ai9tGOO7unoJv6FuJhrWYsx292nZ')">
         <img src="https://files.catbox.moe/8ypxjr.jpeg" alt="Course 2" class="course-image" />
         <div class="course-content">
           <div class="course-title">AI VOICE CLONING</div>
@@ -130,29 +146,30 @@ button {
         </div>
       </div>
 
-      <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1ZU99WiLZMt0XTJw6uIpPOmMu02bem5J9')">
+      <div class="course-card" data-aos="fade-up" onclick="openCourse('https://drive.google.com/drive/folders/1ZU99WiLZMt0XTJw6uIpPOmMu02bem5J9')">
         <img src="https://files.catbox.moe/4165vx.jpeg" alt="Course 3" class="course-image" />
         <div class="course-content">
           <div class="course-title">WIFI PASSWORD HACKING</div>
           <div class="course-desc">Learn to crack down any WiFi password 🔑.</div>
         </div>
       </div>
-       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1Ep-SzaXwz_IMVyGxuNG7PDc5X9h3s7lZ')">
-        <img src="https://files.catbox.moe/23zy6j.jpeg" alt="Course 4" class="course-image" />
+       <div class="course-card" data-aos="zoom-in" onclick="openCourse('https://drive.google.com/drive/folders/14Nu-gd9sZiibkV4ZzXBLVEWSIS2l50m6')">
+        <img src="https://files.catbox.moe/xdsci8.jpeg" alt="Course 10" class="course-image" />
         <div class="course-content">
-          <div class="course-title">MTN CHEAP DATA</div>
-          <div class="course-desc">Learn secret methods to get cheap data and unlimited Internet 🛜 access .</div>
+          <div class="course-title">VIDEO EDITING AND ANIMATION</div>
+          <div class="course-desc">Learn how to create stunning videos suitable for adverts, and social media content. Also learn to edit like a pro.</div>
         </div>
-      </div>
+      </div>     
       
-      <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/16wPu2skIKnvnE-tKmn_uVOYgNgX-8nTW')">
+      <div class="course-card" data-aos="fade-up" onclick="openCourse('https://drive.google.com/drive/folders/16wPu2skIKnvnE-tKmn_uVOYgNgX-8nTW')">
         <img src="https://files.catbox.moe/lgsoni.jpeg" alt="Course 5" class="course-image" />
         <div class="course-content">
           <div class="course-title">3D LOGO DESIGN </div>
           <div class="course-desc">Learn to design mind-blowing 3d logo for brands and business owners.</div>
         </div>
-      </div>     
-       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1ad6rR4aipwXjszhr3nLzM_w7Y-p3XIF9')">
+      </div> 
+          
+       <div class="course-card" data-aos="zoom-in" onclick="openCourse('https://drive.google.com/drive/folders/1ad6rR4aipwXjszhr3nLzM_w7Y-p3XIF9')">
         <img src="https://files.catbox.moe/f220ys.jpeg" alt="Course 6" class="course-image" />
         <div class="course-content">
           <div class="course-title">3D VIDEO ANIMATION COURSE</div>
@@ -160,7 +177,7 @@ button {
         </div>
       </div>   
       
-       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1zXrVV-Kq1gRB460lQnT7j25rigLiSlt4')">
+       <div class="course-card" data-aos="fade-up" onclick="openCourse('https://drive.google.com/drive/folders/1zXrVV-Kq1gRB460lQnT7j25rigLiSlt4')">
         <img src="https://files.catbox.moe/509ove.jpeg" alt="Course 7" class="course-image" />
         <div class="course-content">
           <div class="course-title">WEB DESIGN COURSE</div>
@@ -168,7 +185,7 @@ button {
         </div>
       </div>  
       
-       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/1Ou8qWKK4xL9qpa66ToZvuGHuqw4LsFtE')">
+       <div class="course-card" data-aos="zoom-in" onclick="openCourse('https://drive.google.com/drive/folders/1Ou8qWKK4xL9qpa66ToZvuGHuqw4LsFtE')">
         <img src="https://files.catbox.moe/9b4fa0.jpeg" alt="Course 8" class="course-image" />
         <div class="course-content">
           <div class="course-title">GOOGLE MY BUSINESS COURSE</div>
@@ -176,7 +193,7 @@ button {
         </div>
       </div>  
       
-       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/133ozNANhpDLDl4zWKUDBiYGwmHyFoFYy')">
+       <div class="course-card" data-aos="fade-up" onclick="openCourse('https://drive.google.com/drive/folders/133ozNANhpDLDl4zWKUDBiYGwmHyFoFYy')">
         <img src="https://files.catbox.moe/wyb0pi.jpeg" alt="Course 9" class="course-image" />
         <div class="course-content">
           <div class="course-title">GRAPHIC DESIGN COURSE</div>
@@ -184,27 +201,43 @@ button {
         </div>
       </div>   
       
-       <div class="course-card" onclick="openCourse('https://drive.google.com/drive/folders/14Nu-gd9sZiibkV4ZzXBLVEWSIS2l50m6')">
-        <img src="https://files.catbox.moe/xdsci8.jpeg" alt="Course 10" class="course-image" />
+      <div class="course-card" data-aos="zoom-in" onclick="openCourse('https://drive.google.com/drive/folders/1Ep-SzaXwz_IMVyGxuNG7PDc5X9h3s7lZ')">
+        <img src="https://files.catbox.moe/23zy6j.jpeg" alt="Course 4" class="course-image" />
         <div class="course-content">
-          <div class="course-title">VIDEO EDITING AND ANIMATION</div>
-          <div class="course-desc">Learn how to create stunning videos suitable for adverts, and social media content. Also learn to edit like a pro.</div>
+          <div class="course-title">MTN CHEAP DATA</div>
+          <div class="course-desc">Learn secret methods to get cheap data and unlimited Internet 🛜 access .</div>
         </div>
-      </div>               
+      </div>          
   
     </div>
   </main><br><br><hr>
   <div class="social">
   <h6>Follow our social handle for more latest tech resources</h6>
-    <button id="wa" onclick="location.href='https://whatsapp.com/channel/0029Vay16NVJENy6op6dBV3B'">WhatsApp Channel</button>
-    <button id="tel" onclick="location.href='https://t.me/benfeitech'">Telegram</button>
-    <button id="you" onclick="location.href='https://www.youtube.com/@benfeitech'">YouTube</button>
+    <button id="wa" onclick="location.href='https://whatsapp.com/channel/0029Vay16NVJENy6op6dBV3B'">
+  <i class="fab fa-whatsapp"></i>
+</button>
+
+<button id="tel" onclick="location.href='https://t.me/benfeitech'">
+  <i class="fab fa-telegram"></i>
+</button>
+
+<button id="you" onclick="location.href='https://www.youtube.com/@benfeitech'">
+  <i class="fab fa-youtube"></i>
+</button>
+
     </div><br>
     
    
   <footer style="text-align: center; font-size: 15px;">
       <div id="foot"> Benfei Course 2025™ || &nbsp; All Rights Reserved</div>
   </footer>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 2000,   
+    once: false       
+  });
+</script>
 
   <script>
     function openCourse(link) {
