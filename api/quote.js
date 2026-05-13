@@ -38,15 +38,13 @@ async function fetchWithTimeout(url, timeoutMs = REQUEST_TIMEOUT_MS) {
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
 
   try {
-    const response = await fetch(url, {
+    return await fetch(url, {
       signal: controller.signal,
       headers: {
         'User-Agent': 'Mozilla/5.0 (MotivationQuoteScraper/1.0)',
         Accept: 'text/html,application/xhtml+xml'
       }
     })
-
-    return response
   } finally {
     clearTimeout(timeoutId)
   }
@@ -89,7 +87,6 @@ async function scrapePage(pageNumber) {
 
 async function refreshQuotePool() {
   const pageNumbers = Array.from({ length: MAX_PAGES_TO_SCRAPE }, (_, index) => index + 1)
-
   const results = await Promise.allSettled(pageNumbers.map((page) => scrapePage(page)))
 
   const allQuotes = results
@@ -103,16 +100,18 @@ async function refreshQuotePool() {
   return allQuotes
 }
 
-function buildResponseFromQuote(quote, cached, poolSize, cacheExpiresAt) {
+function buildResponse(quote, quotes, cached, cacheExpiresAt) {
   return {
     success: true,
     quote: quote.quote,
     author: quote.author || 'Unknown',
     tags: Array.isArray(quote.tags) ? quote.tags : [],
+    currentQuote: quote,
+    quotes,
     source: 'quotes.toscrape.com',
     sourceUrl: quote.sourceUrl || SOURCE_BASE,
     cached,
-    totalQuotes: poolSize,
+    totalQuotes: quotes.length,
     cacheExpiresAt: new Date(cacheExpiresAt).toISOString(),
     timestamp: new Date().toISOString()
   }
@@ -141,14 +140,13 @@ module.exports = async (req, res) => {
 
   try {
     if (cacheIsValid) {
-      const cachedQuote = pickRandomItem(cache.quotes)
+      const randomQuote = pickRandomItem(cache.quotes)
 
-      return sendJson(res, 200, buildResponseFromQuote(
-        cachedQuote,
-        true,
-        cache.quotes.length,
-        cache.expiresAt
-      ))
+      return sendJson(
+        res,
+        200,
+        buildResponse(randomQuote, cache.quotes, true, cache.expiresAt)
+      )
     }
 
     const freshQuotes = await refreshQuotePool()
@@ -157,23 +155,22 @@ module.exports = async (req, res) => {
     cache.expiresAt = Date.now() + CACHE_TTL_MS
     cache.updatedAt = new Date().toISOString()
 
-    const freshQuote = pickRandomItem(freshQuotes)
+    const randomQuote = pickRandomItem(freshQuotes)
 
-    return sendJson(res, 200, buildResponseFromQuote(
-      freshQuote,
-      false,
-      freshQuotes.length,
-      cache.expiresAt
-    ))
+    return sendJson(
+      res,
+      200,
+      buildResponse(randomQuote, freshQuotes, false, cache.expiresAt)
+    )
   } catch (error) {
     if (cache.quotes.length > 0) {
       const fallbackQuote = pickRandomItem(cache.quotes)
 
       return sendJson(res, 200, {
-        ...buildResponseFromQuote(
+        ...buildResponse(
           fallbackQuote,
+          cache.quotes,
           true,
-          cache.quotes.length,
           cache.expiresAt || Date.now() + CACHE_TTL_MS
         ),
         warning: 'Returned a cached quote because the scraper failed to refresh.',
