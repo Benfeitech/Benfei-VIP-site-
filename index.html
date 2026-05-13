@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Motivation Quote Scraper API</title>
+  <title>Motivation Quote API Tester</title>
   <style>
     :root {
       --bg: #0b1020;
@@ -13,8 +13,6 @@
       --text: #e2e8f0;
       --muted: #94a3b8;
       --accent: #6366f1;
-      --accent-2: #22c55e;
-      --danger: #ef4444;
       --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       --sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -130,6 +128,7 @@
       background: linear-gradient(180deg, rgba(99, 102, 241, 0.10), rgba(2, 6, 23, 0.20));
       border: 1px solid rgba(99, 102, 241, 0.18);
       margin-bottom: 18px;
+      min-height: 240px;
     }
 
     .quote {
@@ -145,6 +144,7 @@
       color: #cbd5e1;
       font-size: 0.98rem;
       margin-bottom: 14px;
+      min-height: 24px;
     }
 
     .meta {
@@ -386,27 +386,28 @@
         <div class="panel-head">
           <div class="panel-title">
             <h2>Quote Preview</h2>
-            <span>Frontend display of the latest response</span>
+            <span>Only updates after you test the endpoint</span>
           </div>
-          <button id="copyQuoteBtn" class="btn btn-secondary" type="button">Copy Quote</button>
+          <button id="copyQuoteBtn" class="btn btn-secondary" type="button" disabled>Copy Quote</button>
         </div>
 
         <div class="panel-body">
           <div class="hero-card">
-            <p id="quote" class="quote">Loading quote...</p>
+            <p id="quote" class="quote">No response yet. Click “Test Endpoint” to load a quote.</p>
             <p id="author" class="author"></p>
             <div id="meta" class="meta"></div>
           </div>
 
-          <p id="status" class="status"></p>
+          <p id="status" class="status">Waiting for endpoint test...</p>
 
           <div class="controls">
             <div class="button-row">
-              <button id="newQuoteBtn" class="btn btn-primary" type="button">New Quote</button>
+              <button id="newQuoteBtn" class="btn btn-primary" type="button" disabled>New Quote</button>
             </div>
 
             <p class="small">
-              This still calls your backend endpoint directly, so nothing changes for the API itself.
+              The preview stays idle until you test the endpoint. After that, “New Quote” shuffles from the
+              returned quote pool without breaking your API response.
             </p>
           </div>
 
@@ -422,7 +423,7 @@
             <h2>Endpoint Tester</h2>
             <span>Send request and inspect the JSON response</span>
           </div>
-          <button id="copyJsonBtn" class="btn btn-secondary" type="button">Copy JSON</button>
+          <button id="copyJsonBtn" class="btn btn-secondary" type="button" disabled>Copy JSON</button>
         </div>
 
         <div class="panel-body">
@@ -447,14 +448,7 @@
               </div>
               <div class="terminal-label" id="terminalLabel">response.json</div>
             </div>
-            <pre id="jsonOutput">{
-  "success": true,
-  "quote": "Loading...",
-  "author": "Unknown",
-  "source": "quotes.toscrape.com",
-  "cached": false,
-  "timestamp": "..."
-}</pre>
+            <pre id="jsonOutput">Click "Test Endpoint" to view the JSON response here.</pre>
           </div>
 
           <div class="response-grid">
@@ -506,6 +500,8 @@
 
     let latestQuoteText = ''
     let latestResponse = null
+    let quotePool = []
+    let currentQuoteKey = ''
 
     function escapeHtml(value) {
       return String(value)
@@ -533,12 +529,12 @@
     }
 
     function setLoading(isLoading) {
-      newQuoteBtn.disabled = isLoading
       testBtn.disabled = isLoading
-      copyQuoteBtn.disabled = isLoading
-      copyJsonBtn.disabled = isLoading
+      newQuoteBtn.disabled = isLoading || quotePool.length === 0
+      copyQuoteBtn.disabled = isLoading || !latestQuoteText
+      copyJsonBtn.disabled = isLoading || !latestResponse
 
-      statusEl.textContent = isLoading ? 'Loading a new quote...' : ''
+      statusEl.textContent = isLoading ? 'Loading a new quote...' : statusEl.textContent
       if (isLoading) {
         statusCodeEl.textContent = 'Pending...'
         latencyEl.textContent = '—'
@@ -562,20 +558,47 @@
       })
     }
 
-    function renderQuote(data) {
-      quoteEl.textContent = data.quote || 'No quote found.'
-      authorEl.textContent = data.author ? `— ${data.author}` : ''
-      latestQuoteText = data.author
-        ? `${data.quote} — ${data.author}`
-        : data.quote || ''
+    function makeQuoteKey(item) {
+      return `${item?.quote || ''}::${item?.author || ''}`
+    }
 
-      renderMeta(data)
+    function chooseDifferentQuote(pool, previousKey) {
+      if (!Array.isArray(pool) || pool.length === 0) return null
+      if (pool.length === 1) return pool[0]
 
-      if (data.cached) {
+      const candidates = pool.filter((item) => makeQuoteKey(item) !== previousKey)
+      const list = candidates.length ? candidates : pool
+      return list[Math.floor(Math.random() * list.length)]
+    }
+
+    function renderQuote(item, suffix = '') {
+      if (!item) {
+        quoteEl.textContent = 'No quote available yet.'
+        authorEl.textContent = ''
+        metaEl.innerHTML = ''
+        latestQuoteText = ''
+        return
+      }
+
+      quoteEl.textContent = item.quote || 'No quote found.'
+      authorEl.textContent = item.author ? `— ${item.author}` : ''
+      latestQuoteText = item.author
+        ? `${item.quote} — ${item.author}`
+        : item.quote || ''
+
+      currentQuoteKey = makeQuoteKey(item)
+      renderMeta(item)
+
+      if (suffix) {
+        statusEl.textContent = suffix
+      } else if (item.cached) {
         statusEl.textContent = 'Loaded from cache.'
       } else {
         statusEl.textContent = 'Freshly scraped.'
       }
+
+      copyQuoteBtn.disabled = !latestQuoteText
+      newQuoteBtn.disabled = quotePool.length === 0
     }
 
     function updateTester(data, elapsedMs, ok = true) {
@@ -586,6 +609,7 @@
       cachedStateEl.textContent = typeof data.cached === 'boolean' ? String(data.cached) : '—'
       sourceStateEl.textContent = data.source || '—'
       terminalLabel.textContent = endpointInput.value.trim() || '/api/quote'
+      copyJsonBtn.disabled = !latestResponse
     }
 
     async function fetchQuote(endpoint = '/api/quote') {
@@ -594,7 +618,8 @@
       const started = performance.now()
 
       try {
-        setLoading(true)
+        testBtn.disabled = true
+        statusEl.textContent = 'Testing endpoint...'
 
         const res = await fetch(endpoint, {
           method: 'GET',
@@ -617,15 +642,35 @@
             elapsed,
             false
           )
-          throw new Error(data.error || `Request failed with status ${res.status}`)
+          statusEl.textContent = data.error || `Request failed with status ${res.status}`
+          return
         }
 
         if (!data.success) {
           updateTester(data, elapsed, false)
-          throw new Error(data.error || 'Request was not successful')
+          statusEl.textContent = data.error || 'Request was not successful'
+          return
         }
 
-        renderQuote(data)
+        latestResponse = data
+        quotePool = Array.isArray(data.quotes) ? data.quotes : []
+
+        if (quotePool.length > 0) {
+          const selected = data.currentQuote
+            ? data.currentQuote
+            : chooseDifferentQuote(quotePool, '')
+
+          renderQuote(selected, 'Endpoint tested successfully.')
+        } else {
+          renderQuote({
+            quote: data.quote,
+            author: data.author,
+            tags: data.tags || [],
+            source: data.source,
+            cached: data.cached
+          }, 'Endpoint tested successfully.')
+        }
+
         updateTester(data, elapsed, true)
       } catch (error) {
         const fallback = {
@@ -639,17 +684,29 @@
         metaEl.innerHTML = ''
         statusEl.textContent = fallback.error
 
-        if (!latestResponse) {
-          prettyPrint(fallback)
-          statusCodeEl.textContent = 'Error'
-          latencyEl.textContent = '—'
-          cachedStateEl.textContent = '—'
-          sourceStateEl.textContent = '—'
-        }
+        latestResponse = fallback
+        prettyPrint(fallback)
+        statusCodeEl.textContent = 'Error'
+        latencyEl.textContent = '—'
+        cachedStateEl.textContent = '—'
+        sourceStateEl.textContent = '—'
+        copyJsonBtn.disabled = false
       } finally {
         clearTimeout(timeoutId)
-        setLoading(false)
+        testBtn.disabled = false
+        newQuoteBtn.disabled = quotePool.length === 0
+        copyQuoteBtn.disabled = !latestQuoteText
       }
+    }
+
+    function showRandomFromPool() {
+      if (!Array.isArray(quotePool) || quotePool.length === 0) {
+        statusEl.textContent = 'Test the endpoint first to load the quote pool.'
+        return
+      }
+
+      const next = chooseDifferentQuote(quotePool, currentQuoteKey)
+      renderQuote(next, 'Shuffled from the loaded pool.')
     }
 
     async function copyQuote() {
@@ -671,8 +728,8 @@
       }
     }
 
-    newQuoteBtn.addEventListener('click', () => fetchQuote(endpointInput.value.trim() || '/api/quote'))
     testBtn.addEventListener('click', () => fetchQuote(endpointInput.value.trim() || '/api/quote'))
+    newQuoteBtn.addEventListener('click', showRandomFromPool)
     copyQuoteBtn.addEventListener('click', copyQuote)
     copyJsonBtn.addEventListener('click', copyJson)
 
@@ -681,8 +738,6 @@
         fetchQuote(endpointInput.value.trim() || '/api/quote')
       }
     })
-
-    fetchQuote('/api/quote')
   </script>
 </body>
 </html>
