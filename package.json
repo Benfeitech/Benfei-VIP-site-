@@ -1,8 +1,24 @@
 {
-  "name": "motivation-quote-scraper",
+  "name": "movie-scraper-vercel",
   "version": "1.0.0",
-  "private": true,
+  "description": "Scraper for TheMovieBox.xyz to extract movie metadata.",
+  "main": "src/apiHandler.js",
+  "scripts": {
+    "start": "node src/apiHandler.js",
+    "test": "vitest"
+  },
+  "keywords": [
+    "scraper",
+    "movie",
+    "nodejs",
+    "vercel"
+  ],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "cheerio": "^1.1.2"
+    "axios": "^1.6.8"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
   }
 }
