@@ -1,214 +1,230 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Benfei VIP Dashboard</title>
-  <style>
-    :root{
-      --bg:#f4f6f9; --panel:#ffffff; --text:#0f172a; --muted:#64748b;
-      --brand:#1e293b; --brand-contrast:#ffffff;
-      --border:#e2e8f0; --shadow:0 2px 10px rgba(0,0,0,.08);
-    }
-    [data-theme="dark"]{
-      --bg:#0b1220; --panel:#0f172a; --text:#e5e7eb; --muted:#94a3b8;
-      --brand:#111827; --brand-contrast:#ffffff;
-      --border:#1f2937; --shadow:0 2px 12px rgba(0,0,0,.35);
-    }
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;
-         background:var(--bg);color:var(--text);transition:background .2s,color .2s}
-    .sidebar{position:fixed;inset:0 auto 0 0;width:260px;background:var(--brand);color:var(--brand-contrast);
-      transform:translateX(-100%);transition:transform .3s ease;z-index:1000;overflow-y:auto;}
-    .sidebar__header{padding:1rem 1.25rem;background:rgba(255,255,255,.06);font-weight:700;position:sticky;top:0}
-    .menu{list-style:none;margin:0;padding:1rem}
-    .menu a{display:block;padding:.75rem .9rem;border-radius:.6rem;text-decoration:none;color:#cbd5e1;
-      transition:background .15s,color .15s}
-    .menu a:hover{background:rgba(255,255,255,.08);color:#fff}
-    .menu a.active{background:#0ea5e9;color:#001b2b}
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:900}
-    .main{position:relative;min-height:100vh;transition:margin-left .3s ease}
-    .topbar{position:sticky;top:0;z-index:800;background:var(--panel);border-bottom:1px solid var(--border);
-      display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;box-shadow:var(--shadow)}
-    .brand{display:flex;align-items:center;gap:.75rem;font-weight:700}
-    .btn{border:0;border-radius:.6rem;padding:.55rem .8rem;cursor:pointer;background:var(--brand);color:var(--brand-contrast)}
-    .welcome{text-align:center;font-size:1.9rem;font-weight:800;margin:2rem 1rem 1rem}
-    .section{padding:1rem 1.2rem}
-    .cards{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit, minmax(220px,1fr))}
-    .card{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1.2rem;box-shadow:var(--shadow);
-      cursor:pointer;transition:transform .12s;text-decoration:none;color:inherit}
-    .card:hover{transform:translateY(-3px)}
-    .card h3{margin:.2rem 0 .4rem;font-size:1.05rem}
-    .muted{color:var(--muted);font-size:.95rem}
-    .floating-toggle{position:fixed;top:14px;left:14px;z-index:1100;border:0;border-radius:.6rem;padding:.55rem .7rem;
-      cursor:pointer;background:var(--brand);color:var(--brand-contrast);box-shadow:var(--shadow)}
-    .switch{display:inline-flex;align-items:center;gap:.6rem}
-    .switch input{display:none}
-    .switch .track{width:48px;height:26px;border-radius:999px;position:relative;background:#cbd5e1;transition:background .2s}
-    [data-theme="dark"] .switch .track{background:#334155}
-    .switch .thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
-    .switch input:checked + .track .thumb{left:25px}
-    body.sidebar-open .sidebar{transform:translateX(0)}
-    body.sidebar-open .overlay{opacity:1;pointer-events:auto}
-    @media(min-width:1024px){
-      .floating-toggle{display:none}
-      .sidebar{transform:translateX(0)}
-      .main{margin-left:260px}
-      body.sidebar-collapsed .sidebar{transform:translateX(-100%)}
-      body.sidebar-collapsed .main{margin-left:0}
-      .overlay{display:none}
-    }
-    #foot{
-        text-align: center;
-        font-size: 8px;
-    }
-    .but1, .but2, .but3{
-          border: none;
-          border-radius: 25px 0 25px 0;
-          cursor: pointer;
-          padding: 8px;
-          margin: 5px;
-          color: white;
-    }
-    .but1{
-        background: #ce1122;
-        color: #fff;
-    }
-    .but2{
-        background: #2b9c27;
-        color: #fff;
-    }
-    .but3{
-        background: #679cce;
-         color : #fff;
-    }
-.butt{
-    text-align: center;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motivation Quote Scraper</title>
+  <link rel="stylesheet" href="style.css" />
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-  </style>
+
+body {
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.app {
+  width: 100%;
+  max-width: 700px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 8px 12px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 24px;
+}
+
+.quote-box {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 18px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.quote {
+  font-size: 1.4rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.author {
+  font-size: 1rem;
+  color: #cbd5e1;
+}
+
+.status {
+  min-height: 22px;
+  margin-bottom: 18px;
+  color: #a5b4fc;
+  font-size: 0.95rem;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: none;
+  border-radius: 14px;
+  padding: 14px 18px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.primary {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.api-note {
+  margin-top: 18px;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+code {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+</style>
 </head>
 <body>
-  <button class="floating-toggle" id="floatBtn">☰</button>
+  <main class="app">
+    <section class="card">
+      <p class="badge">Motivation API Demo</p>
 
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar__header">📂 Main Menu</div>
-    <ul class="menu" id="menu">
-      <li><a href="course.html" data-nav="course">📚 Digital Courses</a></li>
-      <li><a href="vcf.html" data-nav="course">🗃️ Contact files (vcf)</a></li>
-      <li><a href="bot.html" data-nav="bot">🤖 Whatsapp Bot</a></li>
-      <li><a href="https://benfei-buglibrary.vercel.app/" data-nav="bot">🐛 Bug Bot Script</a></li>
-      <li><a href="ebook.html" data-nav="ebook">📖 Premium E-Books</a></li>
-      <li><a href="weather.html" data-nav="fun">⛈️ Weather</a></li>
-      <li><a href="tic.html" data-nav="settings">🎮 Tictactoe</a></li>
-      <li><a href="mem.html" data-nav="help">🎮 Memory card</a></li>
-   
-    <li><a href="https://benfei-tech-support-1.onrender.com" data-nav="help">📞 Contact Us</a></li>
-    </ul>
-  </aside>
+      <h1>Daily Motivation</h1>
 
-  <div class="overlay" id="overlay"></div>
-
-  <!-- Main -->
-  <main class="main" id="main">
-    <header class="topbar">
-      <div class="brand">
-        <button class="btn" id="topbarBtn">☰</button>
-        <span>Benfei VIP</span>
+      <div class="quote-box">
+        <p id="quote" class="quote">Loading quote...</p>
+        <p id="author" class="author"></p>
       </div>
-      <label class="switch">
-        <input type="checkbox" id="themeSwitch" />
-        <span class="track"><span class="thumb"></span></span>
-        <span class="muted">Dark mode</span>
-      </label>
-    </header>
 
-    <h1 class="welcome">✨ Welcome To Benfei VIP Site ✨</h1>
+      <p id="status" class="status"></p>
 
-    <section class="section">
-      <h2 style="margin:0 0 .8rem">Quick Access</h2>
-      <div class="cards" id="cards">
-        <a class="card" href="course.html" data-nav="course">
-          <h3>📚 Digital Course</h3>
-          <p class="muted">Learn, modern digital marketing skills, h@cking and cracking, web programming and more</p>
-        </a>
-        <a class="card" href="vcf.html" data-nav="course">
-          <h3>🗃️ Contact files(vcf)</h3>
-          <p class="muted">Boost your WhatsApp views with our vcf files in less time 😎</p>
-        </a>
-        <a class="card" href="bot.html" data-nav="bot">
-          <h3>🤖 WhatsApp Bot</h3>
-          <p class="muted">Get your own WhatsApp bot here</p>
-        </a>
-        <a class="card" href="https://benfei-buglibrary.vercel.app/" data-nav="ebook">
-          <h3>🐛 Bug Bot Script</h3>
-          <p class="muted">Get strong and invisible bug bot script capable of crashing any device</p>
-        </a>
-        <a class="card" href="ebook.html" data-nav="ebook">
-          <h3>📖 Premium E-Book</h3>
-          <p class="muted">Find and read e-books</p>
-        </a>
-        <a class="card" href="weather.html" data-nav="fun">
-          <h3>⛈️ WEATHER</h3>
-          <p class="muted">Check current weather ☁️ of any place</p>
-        </a>
-        <a class="card" href="tic.html" data-nav="settings">
-          <h3>🎮 TICTACTOE</h3>
-          <p class="muted">Dare to challenge super computer on this game 😎</p>
-        </a>
-        <a class="card" href="mem.html" data-nav="help">
-          <h3>🎮 MEMORY CARD GAME</h3>
-          <p class="muted">Brain 🧠 memory-sparking game</p>
-        </a>
-           <a class="card" href="https://benfei-tech-support-1.onrender.com" data-nav="game">
-          <h3>📞 Contact Us</h3>
-          <p class="muted">Wants to build and host your own static site, or others? Contact us here</p>
-       
-        </a>
+      <div class="actions">
+        <button id="newQuoteBtn" class="btn primary">New Quote</button>
+        <button id="copyBtn" class="btn secondary">Copy Quote</button>
       </div>
-    </section><br><hr>
-    <p style ="color: #666; text-align: center; font-size: 12px; font-weight: bold;">Follow Our Social Handles Below</p>
-    
-    <div class="butt">
-        
-        <button onclick="location.href='https://youtu.be/vX7dRqqyEdY?si=Ex-x1wlAerXkUIKm'" class="but1">YouTube</button>
-          <button onclick="location.href='https://whatsapp.com/channel/0029Vay16NVJENy6op6dBV3B'" class="but2">WhatsApp</button>
-            <button onclick="location.href='https://t.me/benfeitech'" class="but3">Telegram</button>
-        
-    </div>
-    <br>
-     
-    <footer id="foot" style="background: #070d0be9; color: #fff; padding:15px;">
-        <div>Copyright 2025 || &nbsp Benfei VIP site <br> Powered by ♥️ Benfei Tech</div>
-    </footer>
-  
 
-  <script>
-        // Theme toggle
-    const themeSwitch=document.getElementById('themeSwitch');
-    const saved=localStorage.getItem('theme');
-    const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-    function applyTheme(m){document.documentElement.setAttribute('data-theme',m);
-      localStorage.setItem('theme',m);themeSwitch.checked=(m==='dark')}
-    applyTheme(saved||(prefersDark?'dark':'light'));
-    themeSwitch.addEventListener('change',e=>applyTheme(e.target.checked?'dark':'light'));
+      <p class="api-note">
+        Public API endpoint: <code>/api/quote</code>
+      </p>
+    </section>
+  </main>
 
-    // Sidebar toggle
-    const body=document.body,overlay=document.getElementById('overlay');
-    const topbarBtn=document.getElementById('topbarBtn'),floatBtn=document.getElementById('floatBtn');
-    function isDesktop(){return window.matchMedia('(min-width:1024px)').matches}
-    function toggleSidebar(force){
-      if(isDesktop()){const open=force!==undefined?force:body.classList.contains('sidebar-collapsed');
-        body.classList.toggle('sidebar-collapsed',!open);}
-      else{const open=force!==undefined?force:!body.classList.contains('sidebar-open');
-        body.classList.toggle('sidebar-open',open);}
+  <script>const quoteEl = document.getElementById('quote')
+const authorEl = document.getElementById('author')
+const statusEl = document.getElementById('status')
+const newQuoteBtn = document.getElementById('newQuoteBtn')
+const copyBtn = document.getElementById('copyBtn')
+
+let latestQuoteText = ''
+
+function setLoading(isLoading) {
+  newQuoteBtn.disabled = isLoading
+  copyBtn.disabled = isLoading
+
+  if (isLoading) {
+    statusEl.textContent = 'Loading a new quote...'
+  } else {
+    statusEl.textContent = ''
+  }
+}
+
+function renderQuote(data) {
+  quoteEl.textContent = data.quote || 'No quote found.'
+  authorEl.textContent = data.author ? `— ${data.author}` : ''
+  latestQuoteText = data.author
+    ? `${data.quote} — ${data.author}`
+    : data.quote || ''
+  statusEl.textContent = data.cached
+    ? 'Loaded from cache.'
+    : 'Freshly scraped.'
+}
+
+async function loadQuote() {
+  try {
+    setLoading(true)
+
+    const res = await fetch('/api/quote')
+
+    if (!res.ok) {
+      throw new Error('Failed to load quote')
     }
-    topbarBtn.addEventListener('click',()=>toggleSidebar());
-    floatBtn.addEventListener('click',()=>toggleSidebar());
-    overlay.addEventListener('click',()=>toggleSidebar(false));
-    window.addEventListener('resize',()=>{if(isDesktop())body.classList.remove('sidebar-open')});
-    
-    
-  </script>
+
+    const data = await res.json()
+
+    if (!data.success) {
+      throw new Error(data.error || 'Request was not successful')
+    }
+
+    renderQuote(data)
+  } catch (error) {
+    quoteEl.textContent = 'Something went wrong while loading the quote.'
+    authorEl.textContent = ''
+    statusEl.textContent = 'Error loading quote.'
+  } finally {
+    setLoading(false)
+  }
+}
+
+async function copyQuote() {
+  try {
+    await navigator.clipboard.writeText(latestQuoteText || quoteEl.textContent)
+    statusEl.textContent = 'Quote copied to clipboard.'
+  } catch (error) {
+    statusEl.textContent = 'Could not copy quote.'
+  }
+}
+
+newQuoteBtn.addEventListener('click', loadQuote)
+copyBtn.addEventListener('click', copyQuote)
+
+loadQuote()
+</script>
 </body>
 </html>
