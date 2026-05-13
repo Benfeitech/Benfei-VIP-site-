@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riddle API Tester</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(15, 23, 42, 0.86);
+      --panel-2: rgba(2, 6, 23, 0.92);
+      --border: rgba(148, 163, 184, 0.18);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #6366f1;
+      --accent-2: #22c55e;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(99, 102, 241, 0.20), transparent 30%),
+        radial-gradient(circle at top right, rgba(34, 197, 94, 0.14), transparent 28%),
+        linear-gradient(180deg, #050816 0%, #0b1020 100%);
+      padding: 24px;
+    }
+
+    .wrap {
+      width: min(1280px, 100%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 760px;
+      line-height: 1.6;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: 999px;
+      color: #cbd5e1;
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(2, 6, 23, 0.35);
+    }
+
+    .panel-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .panel-title h2 {
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+
+    .hero-card {
+      padding: 22px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.10), rgba(2, 6, 23, 0.20));
+      border: 1px solid rgba(99, 102, 241, 0.18);
+      margin-bottom: 18px;
+      min-height: 240px;
+    }
+
+    .main-title {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #cbd5e1;
+      margin-bottom: 10px;
+      font-family: var(--mono);
+    }
+
+    .riddle {
+      font-size: clamp(1.2rem, 2.3vw, 1.8rem);
+      line-height: 1.65;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      min-height: 120px;
+      white-space: pre-wrap;
+    }
+
+    .answer {
+      color: #cbd5e1;
+      font-size: 0.98rem;
+      margin-bottom: 14px;
+      min-height: 24px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      color: #cbd5e1;
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+
+    .status {
+      min-height: 22px;
+      margin: 14px 0 18px;
+      color: #93c5fd;
+      font-size: 0.94rem;
+      font-family: var(--mono);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .endpoint-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .input:focus {
+      border-color: rgba(99, 102, 241, 0.65);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.16);
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 14px;
+      padding: 13px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.18s ease, opacity 0.18s ease, border-color 0.18s ease;
+      font-family: var(--sans);
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.85);
+      border-color: var(--border);
+      color: #e2e8f0;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .terminal {
+      background: #020617;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .terminal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(15, 23, 42, 0.92);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.6);
+    }
+
+    .dot.red { background: #f87171; }
+    .dot.yellow { background: #fbbf24; }
+    .dot.green { background: #34d399; }
+
+    .terminal-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.7;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 340px;
+      max-height: 520px;
+      overflow: auto;
+    }
+
+    .json-key { color: #93c5fd; }
+    .json-string { color: #86efac; }
+    .json-number { color: #fbbf24; }
+    .json-boolean { color: #c4b5fd; }
+    .json-null { color: #fda4af; }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .response-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .response-list {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 18px;
+      background: rgba(2, 6, 23, 0.35);
+      font-family: var(--mono);
+    }
+
+    .response-item {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .response-label {
+      color: #93c5fd;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding-top: 3px;
+    }
+
+    .response-value {
+      color: #e2e8f0;
+      word-break: break-word;
+    }
+
+    @media (max-width: 980px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .response-item {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .endpoint-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <div class="pill">API Tester • Scraper Demo • Vanilla HTML/CSS/JS</div>
+        <h1>Riddle API</h1>
+        <p>
+          A modern API-style interface for testing your backend endpoint, viewing the live riddle response,
+          and inspecting the JSON structure in a terminal-like panel.
+        </p>
+      </div>
+    </header>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <h2>Riddle Preview</h2>
+            <span>Only updates after you test the endpoint</span>
+          </div>
+          <button id="copyAnswerBtn" class="btn btn-secondary" type="button" disabled>Copy Answer</button>
+        </div>
+
+        <div class="panel-body">
+          <div class="hero-card">
+            <div class="main-title">riddle</div>
+            <p id="riddle" class="riddle">No response yet. Click “Test Endpoint” to load a riddle.</p>
+            <p id="answer" class="answer"></p>
+            <div id="meta" class="meta"></div>
+          </div>
+
+          <p id="status" class="status">Waiting for endpoint test...</p>
+
+          <div class="controls">
+            <div class="button-row">
+              <button id="newRiddleBtn" class="btn btn-primary" type="button" disabled>New Riddle</button>
+            </div>
+
+            <p class="small">
+              The preview stays idle until you test the endpoint. After that, “New Riddle” shuffles from the
+              loaded pool without touching the backend again.
+            </p>
+          </div>
+
+          <p class="footer-note">
+            Public endpoint: <code>/api/riddle</code>. Other developers can also call this URL from their apps.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <h2>Endpoint Tester</h2>
+            <span>Send request and inspect the JSON response</span>
+          </div>
+          <button id="copyJsonBtn" class="btn btn-secondary" type="button" disabled>Copy JSON</button>
+        </div>
+
+        <div class="panel-body">
+          <div class="endpoint-row">
+            <input
+              id="endpointInput"
+              class="input"
+              type="text"
+              value="/api/riddle"
+              spellcheck="false"
+              aria-label="Endpoint URL"
+            />
+            <button id="testBtn" class="btn btn-primary" type="button">Test Endpoint</button>
+          </div>
+
+          <div class="terminal">
+            <div class="terminal-top">
+              <div class="dots" aria-hidden="true">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="terminal-label" id="terminalLabel">response.json</div>
+            </div>
+            <pre id="jsonOutput">Click "Test Endpoint" to view the JSON response here.</pre>
+          </div>
+
+          <div class="response-grid">
+            <div class="response-list">
+              <div class="response-item">
+                <div class="response-label">status</div>
+                <div id="statusCode" class="response-value">Waiting for request</div>
+              </div>
+              <div class="response-item">
+                <div class="response-label">latency</div>
+                <div id="latency" class="response-value">—</div>
+              </div>
+              <div class="response-item">
+                <div class="response-label">cached</div>
+                <div id="cachedState" class="response-value">—</div>
+              </div>
+              <div class="response-item">
+                <div class="response-label">source</div>
+                <div id="sourceState" class="response-value">—</div>
+              </div>
+            </div>
+          </div>
+
+          <p class="footer-note">
+            Tip: leave the endpoint as <code>/api/riddle</code> for your own backend, or paste the full Vercel URL when testing remotely.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const riddleEl = document.getElementById('riddle')
+    const answerEl = document.getElementById('answer')
+    const metaEl = document.getElementById('meta')
+    const statusEl = document.getElementById('status')
+    const newRiddleBtn = document.getElementById('newRiddleBtn')
+    const copyAnswerBtn = document.getElementById('copyAnswerBtn')
+
+    const endpointInput = document.getElementById('endpointInput')
+    const testBtn = document.getElementById('testBtn')
+    const copyJsonBtn = document.getElementById('copyJsonBtn')
+    const jsonOutput = document.getElementById('jsonOutput')
+    const statusCodeEl = document.getElementById('statusCode')
+    const latencyEl = document.getElementById('latency')
+    const cachedStateEl = document.getElementById('cachedState')
+    const sourceStateEl = document.getElementById('sourceState')
+    const terminalLabel = document.getElementById('terminalLabel')
+
+    let latestAnswerText = ''
+    let latestResponse = null
+    let riddlePool = []
+    let currentRiddleKey = ''
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+    }
+
+    function syntaxHighlight(jsonString) {
+      const html = escapeHtml(jsonString)
+
+      return html
+        .replace(/(&quot;.*?&quot;)(\s*:)/g, '<span class="json-key">$1</span>$2')
+        .replace(/: (&quot;.*?&quot;)/g, ': <span class="json-string">$1</span>')
+        .replace(/: (\d+(?:\.\d+)?)/g, ': <span class="json-number">$1</span>')
+        .replace(/: (true|false)/g, ': <span class="json-boolean">$1</span>')
+        .replace(/: (null)/g, ': <span class="json-null">$1</span>')
+    }
+
+    function prettyPrint(obj) {
+      const text = JSON.stringify(obj, null, 2)
+      jsonOutput.innerHTML = syntaxHighlight(text)
+    }
+
+    function setLoading(isLoading) {
+      testBtn.disabled = isLoading
+      newRiddleBtn.disabled = isLoading || riddlePool.length === 0
+      copyAnswerBtn.disabled = isLoading || !latestAnswerText
+      copyJsonBtn.disabled = isLoading || !latestResponse
+
+      if (isLoading) {
+        statusEl.textContent = 'Loading a new riddle...'
+        statusCodeEl.textContent = 'Pending...'
+        latencyEl.textContent = '—'
+      }
+    }
+
+    function renderMeta(data) {
+      metaEl.innerHTML = ''
+
+      const chips = [
+        data.source ? `source: ${data.source}` : null,
+        typeof data.cached === 'boolean' ? `cached: ${data.cached}` : null,
+        typeof data.totalRiddles === 'number' ? `pool: ${data.totalRiddles}` : null
+      ].filter(Boolean)
+
+      chips.forEach((text) => {
+        const span = document.createElement('span')
+        span.className = 'chip'
+        span.textContent = text
+        metaEl.appendChild(span)
+      })
+    }
+
+    function makeRiddleKey(item) {
+      return `${item?.riddle || ''}::${item?.answer || ''}`
+    }
+
+    function chooseDifferentRiddle(pool, previousKey) {
+      if (!Array.isArray(pool) || pool.length === 0) return null
+      if (pool.length === 1) return pool[0]
+
+      const candidates = pool.filter((item) => makeRiddleKey(item) !== previousKey)
+      const list = candidates.length ? candidates : pool
+      return list[Math.floor(Math.random() * list.length)]
+    }
+
+    function renderRiddle(item, suffix = '') {
+      if (!item) {
+        riddleEl.textContent = 'No riddle available yet.'
+        answerEl.textContent = ''
+        metaEl.innerHTML = ''
+        latestAnswerText = ''
+        copyAnswerBtn.disabled = true
+        return
+      }
+
+      riddleEl.textContent = item.riddle || 'No riddle found.'
+      answerEl.textContent = item.answer ? `Answer: ${item.answer}` : ''
+      latestAnswerText = item.answer || ''
+
+      currentRiddleKey = makeRiddleKey(item)
+      renderMeta(item)
+
+      if (suffix) {
+        statusEl.textContent = suffix
+      } else if (item.cached) {
+        statusEl.textContent = 'Loaded from cache.'
+      } else {
+        statusEl.textContent = 'Freshly scraped.'
+      }
+
+      copyAnswerBtn.disabled = !latestAnswerText
+      newRiddleBtn.disabled = riddlePool.length === 0
+    }
+
+    function updateTester(data, elapsedMs, ok = true) {
+      latestResponse = data
+      prettyPrint(data)
+      statusCodeEl.textContent = ok ? '200 OK' : 'Error'
+      latencyEl.textContent = `${elapsedMs} ms`
+      cachedStateEl.textContent = typeof data.cached === 'boolean' ? String(data.cached) : '—'
+      sourceStateEl.textContent = data.source || '—'
+      terminalLabel.textContent = endpointInput.value.trim() || '/api/riddle'
+      copyJsonBtn.disabled = !latestResponse
+    }
+
+    async function fetchRiddle(endpoint = '/api/riddle') {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 12000)
+      const started = performance.now()
+
+      try {
+        setLoading(true)
+
+        const res = await fetch(endpoint, {
+          method: 'GET',
+          signal: controller.signal,
+          headers: {
+            Accept: 'application/json'
+          }
+        })
+
+        const elapsed = Math.round(performance.now() - started)
+        const data = await res.json().catch(() => ({}))
+
+        if (!res.ok) {
+          updateTester(
+            {
+              success: false,
+              error: data.error || `Request failed with status ${res.status}`,
+              response: data
+            },
+            elapsed,
+            false
+          )
+          statusEl.textContent = data.error || `Request failed with status ${res.status}`
+          return
+        }
+
+        if (!data.success) {
+          updateTester(data, elapsed, false)
+          statusEl.textContent = data.error || 'Request was not successful'
+          return
+        }
+
+        latestResponse = data
+        riddlePool = Array.isArray(data.riddles) ? data.riddles : []
+
+        const selected = data.currentRiddle
+          ? data.currentRiddle
+          : chooseDifferentRiddle(riddlePool, '')
+
+        renderRiddle(selected, 'Endpoint tested successfully.')
+        updateTester(data, elapsed, true)
+      } catch (error) {
+        const fallback = {
+          success: false,
+          error: error.name === 'AbortError' ? 'Request timed out.' : 'Error loading riddle.',
+          message: error.message || ''
+        }
+
+        riddleEl.textContent = 'Something went wrong while loading the riddle.'
+        answerEl.textContent = ''
+        metaEl.innerHTML = ''
+        statusEl.textContent = fallback.error
+
+        latestResponse = fallback
+        prettyPrint(fallback)
+        statusCodeEl.textContent = 'Error'
+        latencyEl.textContent = '—'
+        cachedStateEl.textContent = '—'
+        sourceStateEl.textContent = '—'
+        copyJsonBtn.disabled = false
+      } finally {
+        clearTimeout(timeoutId)
+        testBtn.disabled = false
+        newRiddleBtn.disabled = riddlePool.length === 0
+        copyAnswerBtn.disabled = !latestAnswerText
+      }
+    }
+
+    function showRandomFromPool() {
+      if (!Array.isArray(riddlePool) || riddlePool.length === 0) {
+        statusEl.textContent = 'Test the endpoint first to load the riddle pool.'
+        return
+      }
+
+      const next = chooseDifferentRiddle(riddlePool, currentRiddleKey)
+      renderRiddle(next, 'Shuffled from the loaded pool.')
+    }
+
+    async function copyAnswer() {
+      try {
+        await navigator.clipboard.writeText(latestAnswerText || answerEl.textContent)
+        statusEl.textContent = 'Answer copied to clipboard.'
+      } catch (error) {
+        statusEl.textContent = 'Could not copy answer.'
+      }
+    }
+
+    async function copyJson() {
+      try {
+        const text = JSON.stringify(latestResponse || {}, null, 2)
+        await navigator.clipboard.writeText(text)
+        statusEl.textContent = 'JSON response copied.'
+      } catch (error) {
+        statusEl.textContent = 'Could not copy JSON.'
+      }
+    }
+
+    testBtn.addEventListener('click', () => fetchRiddle(endpointInput.value.trim() || '/api/riddle'))
+    newRiddleBtn.addEventListener('click', showRandomFromPool)
+    copyAnswerBtn.addEventListener('click', copyAnswer)
+    copyJsonBtn.addEventListener('click', copyJson)
+
+    endpointInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        fetchRiddle(endpointInput.value.trim() || '/api/riddle')
+      }
+    })
+  </script>
+</body>
+</html>
