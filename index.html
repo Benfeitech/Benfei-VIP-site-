@@ -72,6 +72,22 @@ h1 {
 .author {
   font-size: 1rem;
   color: #cbd5e1;
+  margin-bottom: 12px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  font-size: 0.85rem;
 }
 
 .status {
@@ -141,6 +157,7 @@ code {
       <div class="quote-box">
         <p id="quote" class="quote">Loading quote...</p>
         <p id="author" class="author"></p>
+        <div id="tags" class="tags"></div>
       </div>
 
       <p id="status" class="status"></p>
@@ -156,11 +173,15 @@ code {
     </section>
   </main>
 
-  <script>const quoteEl = document.getElementById('quote')
+  <script>
+const quoteEl = document.getElementById('quote')
 const authorEl = document.getElementById('author')
+const tagsEl = document.getElementById('tags')
 const statusEl = document.getElementById('status')
 const newQuoteBtn = document.getElementById('newQuoteBtn')
 const copyBtn = document.getElementById('copyBtn')
+
+const API_URL = '/api/quote'
 
 let latestQuoteText = ''
 
@@ -168,32 +189,55 @@ function setLoading(isLoading) {
   newQuoteBtn.disabled = isLoading
   copyBtn.disabled = isLoading
 
-  if (isLoading) {
-    statusEl.textContent = 'Loading a new quote...'
-  } else {
-    statusEl.textContent = ''
+  statusEl.textContent = isLoading ? 'Loading a new quote...' : ''
+}
+
+function renderTags(tags = []) {
+  tagsEl.innerHTML = ''
+
+  if (!tags.length) {
+    return
   }
+
+  tags.forEach((tag) => {
+    const span = document.createElement('span')
+    span.className = 'tag'
+    span.textContent = tag
+    tagsEl.appendChild(span)
+  })
 }
 
 function renderQuote(data) {
   quoteEl.textContent = data.quote || 'No quote found.'
   authorEl.textContent = data.author ? `— ${data.author}` : ''
+  renderTags(data.tags || [])
+
   latestQuoteText = data.author
     ? `${data.quote} — ${data.author}`
     : data.quote || ''
+
   statusEl.textContent = data.cached
-    ? 'Loaded from cache.'
-    : 'Freshly scraped.'
+    ? `Loaded from cache. Total quotes in pool: ${data.totalQuotes || 'unknown'}`
+    : `Freshly scraped. Total quotes in pool: ${data.totalQuotes || 'unknown'}`
 }
 
 async function loadQuote() {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 12000)
+
   try {
     setLoading(true)
 
-    const res = await fetch('/api/quote')
+    const res = await fetch(API_URL, {
+      method: 'GET',
+      signal: controller.signal,
+      headers: {
+        Accept: 'application/json'
+      }
+    })
 
     if (!res.ok) {
-      throw new Error('Failed to load quote')
+      throw new Error(`Request failed with status ${res.status}`)
     }
 
     const data = await res.json()
@@ -206,8 +250,13 @@ async function loadQuote() {
   } catch (error) {
     quoteEl.textContent = 'Something went wrong while loading the quote.'
     authorEl.textContent = ''
-    statusEl.textContent = 'Error loading quote.'
+    tagsEl.innerHTML = ''
+    statusEl.textContent =
+      error.name === 'AbortError'
+        ? 'Request timed out.'
+        : 'Error loading quote.'
   } finally {
+    clearTimeout(timeoutId)
     setLoading(false)
   }
 }
@@ -225,6 +274,7 @@ newQuoteBtn.addEventListener('click', loadQuote)
 copyBtn.addEventListener('click', copyQuote)
 
 loadQuote()
+
 </script>
 </body>
 </html>
